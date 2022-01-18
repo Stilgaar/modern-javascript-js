@@ -11,7 +11,6 @@
 // let result = email.slice(4, 10) decoupe de l'index 4 à 10
 // let result = email.substr(4, 10) decoupe de 4 plus dix caractères
 // let result = email.replace('m', 'w') remplace la première lettre qu'il trouve par un w
-
 // const title = 'Best Reads of 2019'
 // const author = 'Mario'
 // const likes = 30
@@ -1537,7 +1536,7 @@
 
 
 // ********************************************************** \\
-// ************************ !!!!  ASYNC !!! ****************** \\
+// ****************** !!!!  ASYNC !!! ************************ \\
 // ************************************************************ \\
 
 // Start Something Now && Finish it Later
@@ -1560,10 +1559,253 @@
 // le setTimeout est une fonction async. Du coup elle ne bloque pas le code. Han t'as vu truc de ouf ?!
 // C'est ce que j'ai fait dans mon application réact pour faire un refresh sur des trucs en attendant d'avoir une réponse de la BD ! 
 // cchhhheeeck \m/
-console.log(1)
-console.log(2)
-setTimeout(() => {
-    console.log('callback function fired')
-}, 2000)
-console.log(3)
-console.log(4)
+// console.log(1)
+// console.log(2) 
+// setTimeout(() => {
+//     console.log('callback function fired')
+// }, 2000)
+// console.log(3)
+// console.log(4)
+
+
+// ****************** !!!!  REQUETES HTTP !!! ************************ \\
+// ****************** !!!!  XMLhttprequest !!! ************************ \\
+
+// le XMLhttprequest est une vieille façon de chopper des données mais aujourd'hui elle marche encore avec tout pleins de données. 
+// paraitrait il qu'il y a des mecs qui utilisent encore cette methode ancenstrale, alors c'est ptet bien de la connaitre. 
+
+// const getTodos = (resource) => {
+//     return new Promise((resolve, reject) => {
+//         const request = new XMLHttpRequest();
+//         // L'événement 'readystatechange' est déclenché lorsque l'attribut readyState d'un document a changé
+//         request.addEventListener('readystatechange', () => {
+//             if (request.readyState === 4 && request.status === 200) {
+//                 const data = JSON.parse(request.responseText)
+//                 resolve(data)
+//                 // callback(undefined, data)
+//             } else if (request.readyState === 4) {
+//                 // callback('could not fetch data', undefined)
+//                 reject('erreur dans l\'obtention de la data')
+//             }
+//         });
+//         // autre methode pour faire un joli get. ya pas que fetch dans la vie !
+//         request.open('GET', resource);
+//         // request.open('GET', 'https://jsonplaceholder.typicode.com/todos/');
+//         request.send()
+// 
+//     })
+// }
+// 
+// getTodos('todos/shaun.json')
+//     .then(data => {
+//         console.log("promise 1 resolve", data)
+//         return getTodos('todos/jeff.json')
+//     })
+//     .then(data => {
+//         console.log('promise 2 resolved', data)
+//         return getTodos('todos/todos.json')
+//     })
+//     .then(data => console.log('promise 3 resolved', data))
+//     .catch(err => console.log("promise rejected", err))
+// 
+// promise example
+// const getSomething = () => {
+//
+//     return new Promise((resolve, reject) => {
+//         // fetch something
+//         // resolve('de la data')
+//         reject('ya une erreur')
+//     })
+// }
+//
+// version un peu sale d'écrire un then =)
+// getSomething().then((data) => {
+//     console.log(data)
+// }, (err) => {
+//     console.log(err)
+// })
+//
+// la version propre ! \o/ ça commence à me dire quelque chose !
+// getSomething()
+//     .then(data => console.log(data))
+//     .catch(err => console.log(err))
+//
+// CALLBACK HELL (et c'est un petit =))
+// getTodos('todos/jeff.json', (err, data) => {
+//     console.log(data)
+//     getTodos('todos/shaun.json', (err, data) => {
+//         console.log(data)
+//         getTodos('todos/todos.json', (err, data) => {
+//             console.log(data)
+//         });
+//     });
+// });
+// 
+
+
+// ****************** !!!!  FETCH !!! ************************ \\
+
+// Si tu refais des Fetchs un jour, n'oublie pas que tu dois faire un json()
+// sur axios yen a plus besoin non plus, parce qu'ils sont INTELIGENTS !
+// fetch('todos/shaun.json')
+//     .then(data => data.json())
+//     .then(json => console.log(json))
+//     .catch(err => console.log(err))
+
+// ****************** ASYNC AWAIT ************************ \\
+
+// l'async await à été crée pour rendre les chaines de promesses plus propres. (Moi j'aime bien les then qui se suivent perso ...)
+// une fonction ou l'on a écris async attendra toujours une promesse
+
+// const getTodos = async () => {
+// 
+//     const response = await fetch('todos/shaun.json')
+// 
+//     if (response.status !== 200) {
+//         throw new Error('pas de fetch !')
+//     }
+// 
+//     const data = await response.json()
+//     return data;
+// }
+// 
+// 
+// // le gettodos aura la réponse après les console.log, vu que c'est asyncrone elle ne sera pas bloquante
+// console.log(1)
+// console.log(2)
+// 
+// getTodos()
+//     .then(data => console.log('resolved:', data))
+//     .catch(err => console.log('rejected:', err.message))
+// 
+// console.log(3)
+// console.log(4)
+
+
+// ********************************************************** \\
+// ******** !!!!  PETITE APPLICATION METEO !!! *************** \\
+// ************************************************************ \\
+
+// Tout ce qui concerne l'application météo sera pour le moment dans le dossier "APPLICATION METEO"
+
+// Je mets quand même les petits trucs un peu cool ici : 
+
+// le saviez vous ? écrire un return comme ça : 
+// return { cityDets, weather }
+
+// au lieu de comme ça : 
+// return { 
+//  cityDets: cityDets,    
+//   weather: weather
+// }
+
+// ça s'appelle "Object Shorthand Notation" et en fait c'est genre super récent. (cool ? ouais cool)
+
+// Un autre truc cool qui est super récent et qu'on connait super bien aussi du coup c'est la "Destructuring", "Destructuration "
+
+// admetonnt on reçoit un 'data' dans une fonction et qu'il aie deux propriétés, ben on peu l'écire comme en dessous au lieu
+// d'aller les chercher un par un. C'est sexy. j'aime quand c'est sexy
+//const cityDets = data.cityDets;
+// const weather = data.weather;
+// destructuration 
+// const { cityDets, weather } = data;
+
+
+
+// ************************************************************************* \\
+// *********************** !!!!  LOCAL STORAGE  !!! ************************* \\
+// *************************************************************************** \\
+
+// pour sauvgarder les datas il y a deux solutions : 
+// utiliser une DB, ou utiliser le Local Storage
+// l'api Local Storage est directement inclus dans le browser. Pratique
+// tout ce qu'on met dans le localstorage doit être écris en STRING
+
+// Engeristrer de la data 
+// localStorage.setItem('name', 'mario')
+// localStorage.setItem('age', 50) // il a automatiquement transformé en String
+// 
+// // chopper de la data
+// let name = localStorage.getItem('name')
+// // étonnament ça mets MARIO t'as vu ? truc de foufou. 
+// let age = localStorage.getItem('age')
+// console.log(name, age)
+// 
+// // update la data, on l'avait pas vu mais bon c'est vraiment pas compliqué j'ai envie de dire ..  ça 
+// localStorage.setItem('name', 'luigi')
+// localStorage.age = 40
+// name = localStorage.getItem('name')
+// age = localStorage.getItem('age')
+// console.log(name, age)
+// 
+// // supprimer du localStorage, une seule valeure (attention grave rien de neuf) 
+// localStorage.removeItem('name')
+// name = localStorage.getItem('name')
+// console.log(name, age)
+// 
+// // supprimer tout le localStorage 
+// localStorage.clear()
+// name = localStorage.getItem('name')
+// age = localStorage.getItem('age')
+// console.log(name, age)
+
+// *********************** !!!!  STRINGIFY && PARSE  !!! ************************* \\
+
+// encore une fois hein, je suis en train de faire les cours d'un truc d'udemy, je me fais l'anti sèche et forcément ya des trucs ultra simples surlequels on tombe qu'on a déjà fait 1000 fois.
+// c'est pas pour autant que je ne veux pas l'écire pour l'avoir dans un coin de ma tête un peu plus longtemps. c'est ça l'apprentissage : rabacher rabacher rabacher jusqu'a ce que ça rentre
+// oh un papillion ? 
+// soit un array :
+// const todos = [
+//     { text: 'Jouer à Mario Kart', author: "Jeff" },
+//     { text: 'Tuer Bowser', author: "Mario" },
+//     { text: 'Emmerder les français', author: "Macron" }
+// ]
+// // on veut le stocker dans le localStorage
+// // pour ça il faut le stringify, évidement on connait déjà à peu près la réponse =)
+// // console.log(JSON.stringify(todos)) // ce qui donne ça :  [{"text":"Jouer à Mario Kart","author":"Jeff"},{"text":"Tuer Bowser","author":"Mario"},{"text":"Emmerder les français","author":"Macron"}]
+// 
+// localStorage.setItem('todos', JSON.stringify(todos))
+// 
+// // pour recuperer les datas il faut aller chercher les datas et le PARSE
+// const stored = localStorage.getItem('todos')
+// console.log(stored) // ça va donner un objet en string
+// console.log(JSON.parse(stored)) // va redonner un array 
+
+// la suite est des trucs que l'on va mettre dans l'application météo
+
+
+// *********************************** OBJECT ************************************** \\
+// *********************** !!!!  ORIENTED   !!! ************************************** \\
+// *********************************JAVACSCRIPT****************************************** \\
+
+// c'est pour ça que tout le monde nous déteste ? 
+// rappel sur la creation d'objets 
+
+const userOne = {
+    username: 'ryu',
+    email: 'ryu@streetfighterII.com',
+    login() { console.log('utilisateur s\'est connecté') },
+    logout() { console.log('utilisateur s\'est deco') }
+}
+// la on peut évidement appeller tout ce qu'il y a dans l'user : 
+console.log(userOne.email, userOne.username) // etc
+// ou
+userOne.login()
+
+// si on veut refaire un autre user on va devoir faire ça : 
+
+const userTwo = {
+    username: 'chunLi',
+    email: 'chunLi@streetfighterII.com',
+    login() { console.log('utilisateur s\'est connecté') },
+    logout() { console.log('utilisateur s\'est deco') }
+}
+console.log(userTwo.email, userTwo.username)
+userTwo.login()
+
+// en gros sur deux petits user on s'est quand même déjà vachement répétés. Même suffisament pour me herriser le poil t'as vu ?
+// imagine a 10 user ? 1 milliard ? comme sur FaceBook ? c'est pour ça que c'est de la merde
+
+// le mieux c'est qu'on puisse faire ça non ? :
+const userThree = new User('guile@streetfighterII.com', 'guile') // bon la on peut pas encore le faire parce que l'on a pas faire de constructeur
+// mais lorsqu'on en aura un, cela nous donnera un modèle, un prototype ? pour fabriquer rapidement des users. C'est un peu nos modèles dans le back de Node Js

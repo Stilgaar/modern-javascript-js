@@ -112,7 +112,7 @@ input[type="text"]:focus {
 
 .filtered {
   display: none !important;
-}*/
+}
 
 body {
   background: #333;
@@ -126,4 +126,4 @@ body {
 }
 .clock span {
   background: #444;
-}
+}*/
