@@ -1781,31 +1781,114 @@
 // c'est pour ça que tout le monde nous déteste ? 
 // rappel sur la creation d'objets 
 
-const userOne = {
-    username: 'ryu',
-    email: 'ryu@streetfighterII.com',
-    login() { console.log('utilisateur s\'est connecté') },
-    logout() { console.log('utilisateur s\'est deco') }
-}
-// la on peut évidement appeller tout ce qu'il y a dans l'user : 
-console.log(userOne.email, userOne.username) // etc
-// ou
-userOne.login()
-
-// si on veut refaire un autre user on va devoir faire ça : 
-
-const userTwo = {
-    username: 'chunLi',
-    email: 'chunLi@streetfighterII.com',
-    login() { console.log('utilisateur s\'est connecté') },
-    logout() { console.log('utilisateur s\'est deco') }
-}
-console.log(userTwo.email, userTwo.username)
-userTwo.login()
+// const userOne = {
+//     username: 'ryu',
+//     email: 'ryu@streetfighterII.com',
+//     login() { console.log('utilisateur s\'est connecté') },
+//     logout() { console.log('utilisateur s\'est deco') }
+// }
+// // la on peut évidement appeller tout ce qu'il y a dans l'user : 
+// console.log(userOne.email, userOne.username) // etc
+// // ou
+// userOne.login()
+// 
+// // si on veut refaire un autre user on va devoir faire ça : 
+// 
+// const userTwo = {
+//     username: 'chunLi',
+//     email: 'chunLi@streetfighterII.com',
+//     login() { console.log('utilisateur s\'est connecté') },
+//     logout() { console.log('utilisateur s\'est deco') }
+// }
+// console.log(userTwo.email, userTwo.username)
+// userTwo.login()
 
 // en gros sur deux petits user on s'est quand même déjà vachement répétés. Même suffisament pour me herriser le poil t'as vu ?
 // imagine a 10 user ? 1 milliard ? comme sur FaceBook ? c'est pour ça que c'est de la merde
 
 // le mieux c'est qu'on puisse faire ça non ? :
-const userThree = new User('guile@streetfighterII.com', 'guile') // bon la on peut pas encore le faire parce que l'on a pas faire de constructeur
+// const userThree = new User('guile@streetfighterII.com', 'guile') // bon la on peut pas encore le faire parce que l'on a pas faire de constructeur
 // mais lorsqu'on en aura un, cela nous donnera un modèle, un prototype ? pour fabriquer rapidement des users. C'est un peu nos modèles dans le back de Node Js
+
+// CLASSES
+// on crée une class qui est en fait un plan, un blueprint de la classe qu'on veut crée, avec toutes ses caracteristiques.
+// par exemple si on crée une voiture, elle aura forcément quartre roues, un toit, un moteur, ce sera écris dans le prototype, mais on pourra ensuite lui
+// indiquer par exemple la couleur, les options, toit ouvrant, suv, gros branleur, etc etc.
+
+// avec un User Class on pourrait du coup faire ça :
+// User Class {
+// username
+//age
+//login()
+//logout()
+// }
+// puis faire un new User ('ryu', 'ryu@streetfighterII.com')
+// et new User ('chunLi', 'chunli@streetfighterII.com')
+// et new User ('Darmanin', 'Darmanin@streetfighterII.com')
+// etc etc etc c'est ce qu'on fait déjà dans nos modèles dans le back =)
+
+// creation de class : 
+
+// class User {
+//     constructor() {
+//         // mets les proprietés
+//         this.username = 'mario';
+//     }
+// }
+// 
+// const userOne = new User();
+// const userTwo = new User();
+// // le mot clefs "new" fait trois choses : 
+// // 1-  il crée tout d'abord un nouvel objet vide {}
+// // 2- il lie la valeur de 'this' au nouvel objet vide
+// // 3- il appelle le constructeur pour construire l'objet 
+// console.log(userOne)
+// console.log(userTwo)
+// le problème c'est que la, bêtement, les deux vont être exactement pareils. Ce n'est pas vraiment ce qu'on veut faire
+
+// on préfererais faire ça, cela va crée des objets uniques ! 
+// on peut du coup aussi rajouter autant d'arguments que l'on veut  
+
+class Users {
+    constructor(username, email) {
+        // mets les proprietés, et seulement des propriétés, pas des methodes
+        this.username = username;
+        this.email = email;
+        this.score = 0;
+    }
+    // on utilise une fonction raccourcie sans la fonction flechée. Si on fait une fonction flechée, le this va correspondre a windows et non à la classe
+    login() {
+        console.log(`${this.username} juste logged in`);
+        return this;
+    }
+    logout() {
+        console.log(`${this.username} just logged out`);
+        return this;
+    }
+    incScore() {
+        this.score += 1;
+        console.log(`${this.username} has a score of ${this.score}`)
+        return this;
+    }
+}
+
+const userThree = new Users('mario', 'mario@streetfighter.com')
+const userFour = new Users('luigi', 'luigi@hamsterXXX.com')
+// à chaque nouvelle création on dit qu'on crée une INSTANCE de la classe Users
+console.log(userThree, userFour)
+userThree.login()
+userFour.login()
+
+// si on veut chainer les methodes pour le moment faut faire ça :
+userThree.login()
+userThree.logout()
+// du coup on aimerait faire ça : 
+// userThree.login().logout() // mais ça ne marche pas, parce que login() ne retourne pas une valeur (return, du coup elle est undifined)
+
+userThree.incScore() // devrait avoir un score de 1
+userThree.incScore() // devrait avoir un score de 2
+// userThree.incScore().incScore().incScore() // ne fonctionne toujours pas puisque on ne retourne pas de valeurs du coup il est undifined
+// pour faire face à ça, tout simplement, on fait un 'return this' dans les différentes méthodes. Ce qui retournera ce qu'il a dans cette instance
+
+// la du coup ça va fonctionner, parce qu'on retourne le this
+userThree.login().incScore().incScore().logout()
