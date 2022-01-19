@@ -1,9 +1,12 @@
 // **************************************************************************************** \\ 
-// ************************ REVISIONS BASIQUES JAVASCRIPT VANILLIA ************************ \\
-// **************************************************************************************** \\
-// ************************************************************** \\
+// ************************ MODERN JAVASCRIPT UDEMY NET NINJA COURSES*********************** \\
+// ****************************************************************************************** \\
+
+
+// ************************************************************* \\
 // ************************ COTé STRINGS ************************ \\
 // ************************************************************** \\
+
 // let email = 'stilgar182@gmail.com'
 // console.log('RESULT', result)
 // exemples de methodes toujours bon à savoir.
@@ -34,6 +37,7 @@
 // ************************************************************** \\
 // ************************ COTé NUMBERS ************************ \\
 // ************************************************************** \\
+
 // let radius = 10;
 // const pi = 3.1415
 
@@ -736,6 +740,7 @@
 
 
 // ************* ADDEVENT LISENTERS  ******************* \\
+
 // CLICKS //
 
 // AU CAS OU VOUS LISEZ JUSQU'ICI : LA CA DEVIENT DEJA UN POIL PLUS VELU
@@ -1810,7 +1815,9 @@
 // const userThree = new User('guile@streetfighterII.com', 'guile') // bon la on peut pas encore le faire parce que l'on a pas faire de constructeur
 // mais lorsqu'on en aura un, cela nous donnera un modèle, un prototype ? pour fabriquer rapidement des users. C'est un peu nos modèles dans le back de Node Js
 
-// CLASSES
+
+// *********************************** CLASSES ************************************** \\
+
 // on crée une class qui est en fait un plan, un blueprint de la classe qu'on veut crée, avec toutes ses caracteristiques.
 // par exemple si on crée une voiture, elle aura forcément quartre roues, un toit, un moteur, ce sera écris dans le prototype, mais on pourra ensuite lui
 // indiquer par exemple la couleur, les options, toit ouvrant, suv, gros branleur, etc etc.
@@ -1849,46 +1856,341 @@
 // on préfererais faire ça, cela va crée des objets uniques ! 
 // on peut du coup aussi rajouter autant d'arguments que l'on veut  
 
-class Users {
-    constructor(username, email) {
-        // mets les proprietés, et seulement des propriétés, pas des methodes
-        this.username = username;
-        this.email = email;
-        this.score = 0;
-    }
-    // on utilise une fonction raccourcie sans la fonction flechée. Si on fait une fonction flechée, le this va correspondre a windows et non à la classe
-    login() {
-        console.log(`${this.username} juste logged in`);
-        return this;
-    }
-    logout() {
-        console.log(`${this.username} just logged out`);
-        return this;
-    }
-    incScore() {
-        this.score += 1;
-        console.log(`${this.username} has a score of ${this.score}`)
-        return this;
-    }
-}
+// class Users {
+//     constructor(username, email) {
+//         // mets les proprietés, et seulement des propriétés, pas des methodes
+//         this.username = username;
+//         this.email = email;
+//         this.score = 0;
+//     }
+//     // on utilise une fonction raccourcie sans la fonction flechée. Si on fait une fonction flechée, le this va correspondre a windows et non à la classe
+//     login() {
+//         console.log(`${this.username} juste logged in`);
+//         return this;
+//     }
+//     logout() {
+//         console.log(`${this.username} just logged out`);
+//         return this;
+//     }
+//     incScore() {
+//         this.score += 1;
+//         console.log(`${this.username} has a score of ${this.score}`)
+//         return this;
+//     }
+// }
 
-const userThree = new Users('mario', 'mario@streetfighter.com')
-const userFour = new Users('luigi', 'luigi@hamsterXXX.com')
+// const userThree = new Users('mario', 'mario@streetfighter.com')
+// const userFour = new Users('luigi', 'luigi@hamsterXXX.com')
 // à chaque nouvelle création on dit qu'on crée une INSTANCE de la classe Users
-console.log(userThree, userFour)
-userThree.login()
-userFour.login()
+// console.log(userThree, userFour)
+// userThree.login()
+// userFour.login()
 
 // si on veut chainer les methodes pour le moment faut faire ça :
-userThree.login()
-userThree.logout()
-// du coup on aimerait faire ça : 
-// userThree.login().logout() // mais ça ne marche pas, parce que login() ne retourne pas une valeur (return, du coup elle est undifined)
-
-userThree.incScore() // devrait avoir un score de 1
-userThree.incScore() // devrait avoir un score de 2
+// userThree.login()
+// userThree.logout()
+// // du coup on aimerait faire ça : 
+// // userThree.login().logout() // mais ça ne marche pas, parce que login() ne retourne pas une valeur (return, du coup elle est undifined)
+// 
+// userThree.incScore() // devrait avoir un score de 1
+// userThree.incScore() // devrait avoir un score de 2
 // userThree.incScore().incScore().incScore() // ne fonctionne toujours pas puisque on ne retourne pas de valeurs du coup il est undifined
 // pour faire face à ça, tout simplement, on fait un 'return this' dans les différentes méthodes. Ce qui retournera ce qu'il a dans cette instance
 
 // la du coup ça va fonctionner, parce qu'on retourne le this
-userThree.login().incScore().incScore().logout()
+// userThree.login().incScore().incScore().logout()
+
+// *********************************** SUBCLASSES (heritages) ************************************** \\
+
+// c'est une classe qui reçoit des proprietés d'une classe qui hérite de la class de base mais à qui on rajoute des fonctions
+// un peu comme par exemple une classe admin, qui reçoit tout de la part d'un user mais qui reçoit la proprieté 
+// admin, delete, update user (par ex)
+
+// la on dit à Admin : va chercher User et prends toutes les proprietés de classes
+// si la classe qu'on utilise a partir d'un autre et qu'il n'a pas de constructeur, il va de suit prendre celui d'origine 
+// class Admin extends Users {
+//     deleteUser(user) { // prends le nom de l'user
+//         // l'array d'user est filtré avec users.filter et pour chaque user de l'array 'u' 
+//         users = users.filter(u => u.username !== user.username)// il retourne si l'user est different de l'user appellé dans la methode.
+//     }
+// }
+
+// cas ou l'on veuille rajouter un proprieté dans le constructeur admin, mais en gardant celles de l'user : 
+// class Admin extends Users {
+//     constructor(username, email, title) { // en gros comme pour les classes on lui indique ce qu'il faut qu'il construise (c'est clair ?)
+//         super(username, email) // super va dire de regarder dans la classe parent et prendre le constructeur de celui ci
+//         this.title = title // si on omet le super, il va nous sortir une erreure comme quoi il faut le mettre
+//     } // et cela ne fonctionnera pas, là en l'occurence ça passe
+//     deleteUser(user) {
+//         users = users.filter(u => u.username !== user.username)
+//     }
+// }
+// 
+// const userAdmin = new Admin('jeff', 'jeff@roxxormagazine.com', 'leader-fremens-darrakis-united')
+// // console.log(userAdmin) // va donner un user (pour le moment)
+// 
+// let users = [userThree, userFour, userAdmin]
+// console.log(users)
+// userAdmin.deleteUser(userFour)
+// console.log(users)
+// userThree.deleteUser(userAdmin) // ne vas bien évidement pas fonctionner puisque cette methode ne fonctionne pas dans sa classe
+// userThree.deleteUser is not a function
+
+
+// *********************************** Que se passe-t'il dans les classes ?  ************************************** \\
+
+// en Js on a rajouté des classes comme du sucre syntaxique pour reprendre les prototypes. Pour que les classes aient le même genre 
+// de comportement que dans les autres languages. Sous la classe, c'est un "constructeur de protypes" qui est en réalité lancée.
+// d'ailleurs la 'class' en Js n'est que la depuis relativement récement. (je soupçonne que c'est pour que les gens détestent un peu moins Js)
+
+// reprenons cet exemple. 
+// class Users {
+//     constructor(username, email) {
+//         this.username = username;
+//         this.email = email;
+//     }
+// }
+// comment crée ça sans "class ?" facile !! une fonction =) (on est Js ou pas Js)
+// d'ailleurs, vscode kiffe tellement ce genre d'annotations qu'il nous dit "ah ça pourrait être une classe methode t'as vu ? "
+// function Users(username, email) {
+//     this.username = username;
+//     this.email = email;
+//     this.login = function () { console.log(`${this.username} vient de se logger`) }
+// }
+
+
+
+// la fonction new va crée exactement la même chose qu'avec la class (les trois points)
+// const userThree = new Users('mario', 'mario@streetfighter.com')
+// const userFour = new Users('luigi', 'luigi@hamsterXXX.com')
+// console.log(userThree, userFour)
+// userThree.login()
+
+// ce qui est bien quand même, ce serait encore mieux de faire un prototype
+
+// *********************************** PROTOTYPES  ************************************** \\
+
+// tout, dans Js à un prototypes, ce sont les methodes disponibles pour chaque objet, comme Array, Date etc
+// chaque objet va pointer vers un endroit ou toutes ces methodes sont stockés, plutôt qu'elles aient toutes les leurs à chaque fois.
+// ce qui parrait logique parce qu'en terme d'espace utilisé on serait vite à cours de mémoire, comme dans chrome...
+// on peut voir toutes les methodes d'un objet en tappant Object.prototype (Array.prototype, Data.prototype)dans la console. .
+// Même avec celles qu'on a crée.  Sauf que dans notre cas, pour l'instant Users n'en a pas des masses des masses
+
+// aller on reprends cet exemple : 
+// function Users(username, email) {
+//     this.username = username;
+//     this.email = email;
+// }
+// // pour rajouter un prototype à Users on va faire comme ça : 
+// Users.prototype.login = function () {
+//     console.log(`${this.username} vient de se logger`)
+//     return this
+// }
+// Users.prototype.logout = function () {
+//     console.log(`${this.username} just logged out`)
+//     return this
+// }
+// // du coup avec cette 'methode' ou plutot en rajoutant cette methode, on va le mettre directement dans le prototype de Users, et pas 
+// // seulement dans chaque utilisateur. Par contre chaque Users y aura access
+// // What If Method Man Was A JavaScript Fanatic ?... (vous avez deux heures) 
+// 
+// const userThree = new Users('mario', 'mario@streetfighter.com')
+// const userFour = new Users('luigi', 'luigi@hamsterXXX.com')
+// // console.log(userThree, userFour)
+// // userThree.login()
+// // userThree.logout()
+// 
+// // pour pouvoir enchainer les methodes il faut retourner un this encore une fois (ouais comme dans les classes)
+// // userFour.login().logout()
+// 
+// // *********************************** heritages avec les classes fonctionnelles  ************************************** \\
+// 
+// function Admin(username, email, title) {
+//     // au lieu d'utiliser le 'super()' on va utiliser la methode ".call()"
+//     // le premier argument est this il va prendre en compte le contexte de Users, ensuite les autres arguments sont celles qu'on veut passer
+//     Users.call(this, username, email);
+//     // si on veut passer un autre truc spécifique à l'admin il suffit de la rajouter dans la parenthèse au dessus (j'aime bien le 'il suffit'), genre tout est simple t'as vu ? 
+//     // puis de rajouter son propre this
+//     this.title = title;
+// }
+// 
+// // par contre l'Admin ne reçoit pas en héritage les methodes du prototype de Users.
+// // pour lui donner on peut faire ça : 
+// // donc bêtement on va crée un nouveau prototype pour Admin, et on va crée un nouvel objet avec les Users.prototype
+// Admin.prototype = Object.create(Users.prototype)
+// // après ça si on fait un Admin.prototype, on aura un Users d'héritage
+// // si on rajoute une methode à Admin, elle sera directement en dessous du prototype, pas un level en dessous
+// Admin.prototype.deleteUser = function () { }
+// // si on venait à rajouter un "SuperAdmin", on pourra lui rajouter les prototypes d'Admin et du coup il aura également les proto de Users dans
+// // un troisième level. 
+// // Vous aviez rien compris à inception ? Je vous offre le JavaScript
+// 
+// const userAdmin = new Admin("jeff", "jeff@labelgique.be", "leader fremen")
+// console.log(userAdmin)
+
+
+
+// *********************************** INTERLUDE ************************************** \\
+// ****************** Application des Class && Prototypes sur l'Appli Meteo  *********** \\
+// *********************************** INTERLUDE **************************************** \\
+
+// on a utilisé des classes de ouf avec des methodes dans l'appli meteo, j'ai essayé de l'expliquer au mieux en laissant les deux versions. Franchement c'est quand même pas mal de faire ça comme ça
+// je trouve ça presque dommage que nous ne l'ayons pas vraiment fait 'comme ça en cours'. Attention, on a utilisé des grosses classes avec des gros constructeurs pour notre base de données avec
+// mongoose, mais pas vraiment dans le front. (Hormis pour le café de la place si je me rapelle bien.) Le fait est est que le fait est. 
+
+
+
+// *********************************** STORING DATA ******************************************* \\
+// *********************** ENREGISTRER DE LA DATA  ********************************************* \\
+// ********************************* NOSQL && FIREBASE ****************************************** \\
+
+// Alors je vous le cache pas, les sites, ça marche avec de la data. (Au cas ou vous ne le sachiez pas)
+// généralement du coup on bosse avec une Base De Données. 
+// il y a deux types de base de données : 
+// SQL qui va fonctionner avec des tables, rangées et collonnes (tables, rows and columns). Ce qui va être trop cool si on utilise du PHP
+// NoSQL qui va fonctionner avec des collections, des documents et des proprietés. Ce qui va être trop cool si on utilise du JavaScript. Qui utilise du JavaScript ?!! J'UTILISE LE JAVASCRIPT ! 
+
+// une NoSQL va fonctionner avec une instance principale (genre le nom de votre site ?)
+// puis va disposer de plusieurs collections, par exemple : Users, BlogPosts, Comments, Pizzas, Chaussures Gauches (spécial unijambistes), Chaussures etc etc
+// dans chaque collection on aura ce qu'on appelle des documents. 
+// chaque document est un Objet avec des clefs et des valeurs (key && values). Chaque document ressemble un tout petit peu à un objet JavaScript, c'est pour ça que la vie est bien foutue
+
+// Firebase est un service clefs en main fait par google qui nous permet d'avoir un serveur sans devoir faire un serveur 
+// il nous permet de pas se prendre la tête avec l'auth, et par exemple, une DB avec une RealTime DataBase, ou dernièrement Cloud Firestore
+// c'est gratos pour les petites applications perso web. Attention, par contre, il faut s'inscrires sur firebase.google.com puis de crée un nouveau projet. 
+// ce truc vous fillera un lien, est c'est cool non ? =) 
+// ya pas mal de trucs à faire pour installer le firebase machin. Jvais pas tout réécrire tout ici, je pense suivre un autre cours sur Firebase pour mieux comprendre par la suite
+// ce qu'il faut savoir, c'est que j'ai rajouté le script firebase sur l'index.html pour pouvoir l'utiliser. (D'ailleurs au stade ou j'en suis, tout le HTML de base que j'avais écris 
+// pour les autres applications je les ai supprimés pour plus de clarté, mais généralement dans ce sandbox.js, j'avais déjà à peu près tout copié coller pour plus de réusablity de tout le borderl
+// puis les exemples parlent d'eux mêmes pour la plupart donc 'est plutôt pas mal)
+
+
+// POUTAIN comment perdre 1 heure ... Alors si vous suivez le tuto, bha maintenant, firebase donne un tout autre code snippet pour acceder a la DB. Sauf que bha, je ne sais pour quelle raison ça MERDE
+// faudrais que découvre poruquoi d'ailleurs, mais c'est pas le moment je pense alors le code original que mainteant Firebase nous donne c'est ça : (je le mets la pour les passants, on ne sait jamais)
+//// // // //  <script type="module">
+//// // // //    // Import the functions you need from the SDKs you need
+//// // // //    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.3/firebase-app.js";
+//// // // //    import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.6.3/firebase-analytics.js";
+//// // // //    // TODO: Add SDKs for Firebase products that you want to use
+//// // // //    // https://firebase.google.com/docs/web/setup#available-libraries
+//// // // //  
+//// // // //    // Your web app's Firebase configuration
+//// // // //    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+//// // // //    const firebaseConfig = {
+//// // // //      apiKey: "AIzaSyADij-m4SoKb-hB-Gmix5hdCWSXJq4oJ6w",
+//// // // //      authDomain: "modern-js-stilgar.firebaseapp.com",
+//// // // //      projectId: "modern-js-stilgar",
+//// // // //      storageBucket: "modern-js-stilgar.appspot.com",
+//// // // //      messagingSenderId: "518314991342",
+//// // // //      appId: "1:518314991342:web:6990c945e4c7a58054ddff",
+//// // // //      measurementId: "G-XWH9NL626T"
+//// // // //    };
+//// // // //  
+//// // // //    // Initialize Firebase
+//// // // //    const app = initializeApp(firebaseConfig);
+//// // // //    const analytics = getAnalytics(app);
+//// // // //  </script>
+
+// or ce qu'il veut, pour que ça fonctionne, c'est comment c'est écris actuellement dans le HTML (jvais le réécrire ici pour plus de clarté)
+// au cas ou j'espère que ça vous aidera dans des futures péligrinations. 
+
+////////// <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase-app.js"></script>
+////////// <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase-firestore.js"></script>
+////////// <script>
+//////////     // Initialize Firebase
+//////////     var config = {
+//////////         apiKey: "AIzaSyADij-m4SoKb-hB-Gmix5hdCWSXJq4oJ6w",
+//////////         authDomain: "modern-js-stilgar.firebaseapp.com",
+//////////         projectId: "modern-js-stilgar",
+//////////         storageBucket: "modern-js-stilgar.appspot.com",
+//////////         messagingSenderId: "518314991342",
+//////////         appId: "1:518314991342:web:6990c945e4c7a58054ddff",
+//////////         measurementId: "G-XWH9NL626T"
+//////////     };
+//////////     firebase.initializeApp(config);
+//////////     const db = firebase.firestore();  
+////////// </script>
+////////// 
+
+// VERSION GET // 
+
+const list = document.querySelector('ul')
+const addRecipe = (recipe, id) => {
+
+    let time = recipe.created_at.toDate()
+
+    let html = `
+    <li data-id="${id}"> 
+    <div>${recipe.title}</div>
+    <div>${time}</div>
+    <button class="btn btn-danger btn-sm my-2">Suprimer</button>
+    </li>
+    `;
+
+    list.innerHTML += html;
+}
+
+db.collection('recipes') // accès à la DB, et à la collection spécifique
+    .get() // methode pour grab des datas
+    .then(snapshot => { // puis en fonction de la réponse, on fait ça : simple, basique.
+        // console.log(snapshot.docs[0].data()) // ça permet de voir les datas dans la base de données. (et la, ça marche, truc de fou...)
+        // mais ce qu'on veut c'est de tous les avoir. donc on balance un forEach
+        snapshot.forEach(doc => addRecipe(doc.data(), doc.id));
+    })
+    .catch(err => console.log(err))
+
+// VERSION SUMBIT//ADD // 
+
+// j'ai envie de dire que c'est pas foufou par rapport à notre utilisation de mongoose par exemple
+// on crée un modèle qui va aller pousser dans la db, dans la collection reciepe ce modele
+// c'est plutôt cool de faire ça a la main aussi =)
+// je pense que presque tout parler pour lui même dans cet exemple
+
+const form = document.querySelector('form')
+form.addEventListener('submit', e => {
+    e.preventDefault()
+
+    const now = new Date()
+
+    const recipe = {
+        title: form.recipe.value,
+        // notez que pour le Timestamp, firebase/firestore à sa propre notation bien spécifique. 
+        created_at: firebase.firestore.Timestamp.fromDate(now)
+    }
+
+    db.collection('recipes')
+        .add(recipe)
+        .then(() => console.log('recette ajoutée'))
+        .catch(err => console.log(err))
+
+})
+
+// VERSION SUPPRIMER // 
+
+// on crée un event listener sur list pour pouvoir chopper tous les boutons supprimer individuellement
+// beaucoup plus pratique que d'en mettre un par bouton (ce qui au bout d'un moment serait pas loin d'être 
+// mission impossible, sponsorisé par la Scientologie)
+list.addEventListener('click', e => {
+    // faut qu'on s'assure que ce ne sont que les boutons que l'on va cliquer qui seront target
+    // la sans spécifier, toute la div, liste etc sera target
+    // console.log(e)
+
+    // pour supprimer il faut pointer vers le bon truc. on va alors rajouter l'id justement lors du 'get()'
+    // puis l'intégrer dans la list quelque part. En l'orrucence on peut faire ça en HTML : <li data-id="${id}'>
+    if (e.target.tagName === 'BUTTON') {
+        // DONC, pour chopper l'id de façon simple. On choppe chaque element de la liste qui s'appelle button
+        // dans chaque button on lui a rajouté un data-id propre à chaque élément dans la DB et donc récupérable
+        // puis pour rechopper l'id qu'il faut on target le bouton, on choppe son parent et on choppe son attribut data-id
+        // écris comme en dessous c'est un poil long, mais quand on y pense, c'est un peu simple non ? =)
+        const id = e.target.parentElement.getAttribute('data-id')
+        // console.log(id) et ça marche t'as vu ? 
+
+        // encore une fois du coup on choppe la database
+        db.collection('recipes')
+            .doc(id)
+            .delete()
+            .then(() => console.log('recette supprimée'))
+            .catch(err => console.log(err))
+
+    }
+})

@@ -5,6 +5,8 @@ const card = document.querySelector('.card')
 const details = document.querySelector('.details')
 const time = document.querySelector('img.time')
 const icon = document.querySelector('.icon img')
+const forecast = new Forecast()
+
 
 const updateUi = (data) => {
 
@@ -63,20 +65,22 @@ const updateUi = (data) => {
 //<script src="scripts/forecast.js"></script>
 // <script src="scripts/app.js"></script>
 
-const updateCity = async (city) => {
 
-    const cityDets = await getCity(city)
-    const weather = await getWeather(cityDets.Key)
-
-    // le saviez vous ? écrire comme ça : 
-    return { cityDets, weather }
-    // au lieu de comme ça : 
-    // return { 
-    //  cityDets: cityDets,    
-    //   weather: weather
-    // }
-    // ça s'appelle "Object Shorthand Notation" et en fait c'est genre super récent. (cool ? ouais cool)
-}
+// on desactive UPDATECITY vu qu'elle est stockée dans la classe FORECAST
+// const updateCity = async (city) => {
+// 
+//     const cityDets = await getCity(city)
+//     const weather = await getWeather(cityDets.Key)
+// 
+//     // le saviez vous ? écrire comme ça : 
+//     return { cityDets, weather }
+//     // au lieu de comme ça : 
+//     // return { 
+//     //  cityDets: cityDets,    
+//     //   weather: weather
+//     // }
+//     // ça s'appelle "Object Shorthand Notation" et en fait c'est genre super récent. (cool ? ouais cool)
+// }
 
 cityForm.addEventListener('submit', (e) => {
     e.preventDefault()
@@ -85,9 +89,14 @@ cityForm.addEventListener('submit', (e) => {
     const city = cityForm.city.value.trim()
     cityForm.reset()
 
-    updateCity(city)
+    // updateCity(city)
+    //     .then(data => updateUi(data))
+    //     .catch(err => console.log(err))
+    // maintenant qu'on a la classe ceci va s'écrire comme ça : 
+    forecast.updateCity(city)
         .then(data => updateUi(data))
         .catch(err => console.log(err))
+    // du coup on peut retirer la fonction updateCity un peu plus haut
 
     // on va mettre la valeur dans le localStorage (suite au cours du localStorage)
     localStorage.setItem('city', city)
@@ -97,7 +106,7 @@ cityForm.addEventListener('submit', (e) => {
 // s'il trouve un 'city' de local Storage il va automatiquement prendre la dernière valeure pour la faire apparaitre dans le DOM
 // c'est un peu le même système qu'on a pour voir si on a un token sur notre app.js dans React
 if (localStorage.getItem('city')) {
-    updateCity(localStorage.getItem('city'))
+    forecast.updateCity(localStorage.getItem('city'))
         .then(data => updateUi(data))
         .catch(err => console.log(err))
 }
