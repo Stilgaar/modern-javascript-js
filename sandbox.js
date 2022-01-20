@@ -2412,3 +2412,90 @@
 // ****************************************************************************************** \\
 // *********************** MODERN WORKFLOW WITH BABEL && WEBPACK ****************************** \\
 // ******************************************************************************************* \\
+
+
+// ************************* BABEL  ************************ \\
+
+//  https://babeljs.io/
+// Babel est un truc de foufou, qui traduit automatiquement le Js moderne pour que les anciens browsers puissent le lire tranquiellement
+// note : j'ai fait ça dans un dossier nommé "babel", normallement il doit être quelque part dans le repo.
+
+// ETAPE 1
+
+// pour l'installation on a fait les trucs suivants : 
+
+// on a fait un npm init (comme langer le package.json)
+
+// npm install @babel/core @babel/cli --save-dev // le CLI est pour qu'on puisse utiliser des commandes de babel dans l'interface (c'est donc ça le CLI ? =) )
+// Command Line Interface 
+// npm install @babel/preset-env --save-dev
+// puis on a crée un fichier '.babelrc' pour lui indiquer quel truc il doit utiliser, en l'occrence preset-env écris comme ça :
+
+// {
+//     "presets": ["@babel/preset-env"]
+// }
+
+// après avoir mis ça en place, on peut écrire du Js tranquillement et ça va marcher dans tous les browser de la planète, sauf IE 11 parce que c'est grave de la demer. 
+
+// ETAPE 2.
+// après s'être crée un fichier en Js, on va dire à babel de le convertir, pour ça ya besoin que d'une linge : 
+// 1 on indique le 'node_modules\.bin\babel' parce que c'est lui qui fera la conversion 
+// 2 on indique le fichier qu'il doit check sa teub
+// 3 le -o est la commande pour indiquer le fichier de sortie
+// 4 after.js est le fichier de sortie. c'est un poil comme typescript du coup.
+// node_modules\.bin\babel before.js -o after.js
+
+// si dans le BEFORE.JS on avait ça : 
+// const greet = (name) => {
+//     console.log(`HELLOW ${name}`)
+// }
+// greet()
+// 
+// // dans le AFTER.JS on aura ça : 
+// 
+// "use strict";
+// var greet = function greet(name) {
+//     console.log("HELLOW ".concat(name));
+// };
+// greet();
+// 
+
+// on oublie pas : on fait un .gitignore pour virer les node_modules de notre repo.
+// il est récuperable directement et facilement en tappant npm i 
+// mais ça, on le sait déjà !
+// pro tip : vous n'avez pas assez d'espace disque ? virez tous vos nodes_modules de vos dossiers de projets, vous allez gagner de quoi installer modern warfare.
+
+// après qu'est ce qu'on va faire ? 
+
+// on va crée un dossier ou ya les fichiers JavaScript moderne qu'on va vouloir convertir (SRC)
+// un endroit ou il y aura le HTML (qu'on mettera dans un dossier DIST)
+// et un endroit avec un dossier avec ce qu'on peut uiliser online (dans un dossier DIST, dedans on fait un sousdossier assets avec le bundle.js)
+// le bundle.js sera la ou yora la traduction des fichiers JS pour tous les browsers (si j'ai bien pigé)
+// du coup dans le HTML on va lier le script de bundle directement
+// NOTE : on écira jamais directement de code dans le bundle.js 
+
+// une fois que tout ça c'est fait, faut lancer le code suivant : 
+//  node_modules\.bin\babel src/index.js -o dist/assets/bundle.js
+
+// mais c'est ptet un peu long de le faire à chaque fois ? 
+// du coup on peut faire un truc avec cette commande, parce que c'est du code
+// et dans le code on aime bien pas trop se compliquer la vie, en écrivant 300 lignes de codes pour gagner 5 secondes non ? NON ?
+
+// Alors methode 1 :
+// on va dans le package.json et on rajoute ça : 
+// "scripts": {
+//     "babel": "node_modules/.bin/babel src/index.js -o dist/assets/bundle.js"
+//   },
+// du coup en faisant un npm run babel (ou peu importe comment on l'a appellé, ça lancera cette ligne de commande)
+
+// Alors methode 2 :
+// on peut rajouter un flag (le watch flag) qui permet de regarder le code quand il change. Et ça c'est le top du top non ? 
+// ce qui au final rendrait ça : 
+// ouais ya juste un petit -w devant le fichier que l'on check. 
+//"scripts": {
+//    "babel": "node_modules/.bin/babel src/index.js -w -o dist/assets/bundle.js"
+// }
+// du coup vous lancez une fois le script (npm run babel) puis la fonction watch se fera en permanence. Bon ya pas de log comme dans
+// typescript ou dans SASS mais vous serez quand même pas mal loti, quand on voit le code en pur Js (rajoutant quand même deux trois lettres)
+
+// ************************* BABEL  ************************ \\
