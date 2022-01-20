@@ -2498,4 +2498,143 @@
 // du coup vous lancez une fois le script (npm run babel) puis la fonction watch se fera en permanence. Bon ya pas de log comme dans
 // typescript ou dans SASS mais vous serez quand même pas mal loti, quand on voit le code en pur Js (rajoutant quand même deux trois lettres)
 
-// ************************* BABEL  ************************ \\
+// ************************* WEBPACK  ************************ \\
+
+// alors si vous avez tout lu jusque là, c'est vraiment pas mal, ya quelque jours PA rigolait parce que je disais qu'il y avait plus de texte maitnenatn
+// alors que maintenant, la tout de suite, je suis en train de commenter ce que je fais dans le dossier babel webpack :D (désolé ? )
+
+// webpack est un emballeur de modules.
+// par exemple les fichiers app.js, chat.js et ui.js de notre projet 'Chat RoomZ' seraient via webpack, mis en un seul fichier bundle.js
+// mais on peut aussi, pendant qu'on fait ce bundle le faire passer par Babel, comme ça ça convertis notre code
+// mais aussi faire un serveur de développement local, ce qui est trop classe, mais je suppose que c'est juste un serveur local (comme un nodejs/express)
+
+// par exemple, la dans notre dossier Babel/src/, l'index.js pourrait être amené à utiliser des modules exterieures à index.js justement.
+// comme par exemlple les popups ? la connexion à la DB etc etc etc. 
+// c'est surtout qu'on a pas toujours jours besoin de tout le code quand on monte un projet
+// c'est webpack qui rend ça possible
+
+// faut commencer par crée un fichire webpack.config.js à la racine
+// c'est pas une nouveauté parce c'est déjà ce qu'on utlise dans node/express quand on exporte nos fichiers. 
+// ça marche que dans node.js, pas dans le browser
+// puis d'y mettre module.exports = {} 
+// devant on va bien sur mettre les differents fichiers d'inputs, mais également ou on va le faire atterir par la suite.  
+
+// __dirname va donner le chemin relatif à un chemin absolu... c'est pas clair ? 
+// s'il y a un dossier type 'C:\Users\stilg\Desktop\BOCAL VRAI COURS\Modern Js\BabelandWebpack' , '__dirname' va remplacer 'C:\Users\stilg\Desktop\BOCAL VRAI COURS\Modern Js\'
+// pour ça il faut utilisre : const path = require('path') , c'est de base dans node
+// puis ce sera plus écris comme ça : path: path.resolve(__dirname), '/dist/assets'
+// après on lui donne le nom du fichier qu'on veut viser, en l'occurence bundle.js. 
+
+// pas oublier d'installer webpack et son CLI 'npm i webpack webpack-cli --save-dev'
+// on peut rajouter une ligne dans package.json ""webpack" : "./node_modules/.bin/webpack""
+// on pourra ensuite l'utiliser comme ça : npm run webpack (tout simplement)
+// quelque chose me dit qu'après on aura une gouzu commande nous permettant de tout régler
+
+// ce que Webpack fait le mieux, c'est la possilibité d'utilsier des modules exterieurs. 
+// c'est globallement ce qu'on fait en react quand on fait des imports de fichiers, ni plus ni moins. 
+// par exemple si on a nos deux fichiers index.js et dom.js, et qu'on importe dom.js dans index.js, dom.js sera lu en premier, puis il executrera le code
+//d'index.js. 
+// par contre ce n'est pas parce qu'on importe dom.js dans index.js qu'on peut accéder à ces fonctions. 
+// chaque fichier a son propre scope c'est pour ça qu'on export les fonctions 
+
+// si on veut exporter les fonctions on les export comme j'ai dit plus haut. 
+// on le fait déjà pas mal dans react, même tout le temps au final, donc on a l'habitude. 
+
+// notez qu'on peux exporter n'importe quoi, un string, un array un number etc
+// c'est ce que je fais déjà un tout petit peu avec mes arrays dans uppertown. (vu que plus rien n'est vrai !)
+
+// alors pour exporter, on peut 
+// SOIT : 
+// faire un export function blabla () {}
+// SOIT : 
+// faire un export {machin, bla} en bas du fichier
+// exeple : import { addTitle, styleBody, contact }
+
+// à la création d'un fichier on peut aussi, si on en exporte un truc unique, et que ce fichier ne servira qu'a sortir ce truc unique 
+// on écrira 'export default machin;' 
+// c'est à ce moment là qu'on importera un fichier sans les {} d'un fichier, d'ailleurs on pourra l'appeller n'importe comment
+
+// par exmple : un 
+// 
+// user [ { name: "pouet" , age : 69 }]
+// export default user;
+// 
+// dans le fichier ou on l'importera ou pourra simplement l'écrire comme ça :
+// "import user from './fichier'"", d'ailleurs on pourra l'appeller comme on veut parce qu'au final ce sera toujours la même data qu'on sortira du fichier$
+//  par exemple pour sortir user j'aurais pu l'importer avec "import test from './fichier'"
+
+// alors la le fun commence, dans un fichier 'export default blabla;' on peut également sortir une fonction par exemple ou peu importe avec un export const blablalba = () => {coucou}
+// à ce moment là, quand on l'importera faudra l'écrire comme ça dans le fichier visé : import users, { getPremUsers } from './data'
+// 
+
+// pour l'export on peut EGALEMENT rajouter un export '{getPremUsers, users as default}'
+// comme ça bha comme ça quoi
+
+
+// ************************* WEBPACK DEV SERVER  ************************ \\
+
+// pour faire tourner tout ce petit beau monde, on va la l'installer comme ça  :
+// npm install webpack-dev-server@3.2.1
+// notez qu'il y a probablement une version plus récente à l'heure ou je vous parle
+// après faut aller le mettre en place dans le webpack.config.js
+
+// comme ceci  :
+
+// devServer: {
+//    contentBase: path.resolve(__dirname, 'dist'),
+//    publicPath: '/assets/'
+// }
+
+// puis de rajouter "serve": "webpack server" dans le package.json dans la config des scripts
+// notez que j'ai mis des versions récentes de webpack et que du coup les commandes ont un peu changés
+// par contre à ce moment là, il fait pas de bundle.js; il ne faut que l'émulation. 
+
+// // ************************* WEBPACK MODES  ************************ \\
+
+// alors entre temps on a viré babel (pour le moment) de notre script
+// et on a remplacé la commande webpack par "build" 
+// du coup aussi pour les modes on les a définis comme ça : 
+// comme ça en plus on sait qui est quoi.
+// "scripts": {
+//     "build": "./node_modules/.bin/webpack --mode production",
+//     "serve": "webpack server --mode development"
+//   },
+
+// // ************************* BABEL A TRAVERS WEBPACK  ************************ \\
+
+// parce que ce serait quand même vachement plus cool si on pouvait le faire en plus cool !
+// on va utliser des loaders dans webpack. Faut d'abord installer le loader de babel
+// "npm i babel-loader --save-dev" 
+// dans le webpack config.js on rajoute ça : 
+
+// module: { // un module avec 
+//     rules: [{ // des régles
+//         test: /\.js$/, // il check, tout les fichiers JS (c'est un /regex/)
+//         exclude: /node_modules/, // on exclu les node_modules, sinon ça fait beaucoup à modif
+//         use: {
+//             loader: 'babel-loader', // on utilise le loader de babel pour l'utiliser dans le module
+//             options: {
+//                 presets: ['@babel/preset-env'] // et on utlise le preset-env qu'on utlisiait déjà avant.
+//             }
+//         }
+//     }]
+// }
+
+// et on a un truc avec tout qui marche
+
+// en faire un BOILERPLATeeeeeeeeee \o/ 
+
+// // ************************* WEBPACK && CSS  ************************ \\
+
+// on va faire également passer le CSS par webpack du coup faut installer des loaders en plus
+// npm i css-loader style-loader --save-dev
+
+// faudra rajouter une micro règle dans le webpack.config.js 
+
+// {
+//     test: /\.css$/,
+//     use: ['style-loader', 'css-loader']
+// }
+
+// par contre pour que le CSS soit pris en compte, il faudra l'importer dans le fichier JS
+// comme dans react en gros. 
