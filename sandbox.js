@@ -2,7 +2,6 @@
 // ************************ MODERN JAVASCRIPT UDEMY NET NINJA COURSES*********************** \\
 // ****************************************************************************************** \\
 
-
 // ************************************************************* \\
 // ************************ COTé STRINGS ************************ \\
 // ************************************************************** \\
@@ -2044,6 +2043,40 @@
 // *********************** ENREGISTRER DE LA DATA  ********************************************* \\
 // ********************************* NOSQL && FIREBASE ****************************************** \\
 
+// TOUT LE HTML
+// <div class="container my-5">
+//     <h2>Recipes</h2>
+//     <ul>
+//     </ul>
+//     <form>
+//         <label for="recipe">Add a new recipe:</label>
+//         <div class="input-group">
+//             <input type="text" class="form-control" id="recipe" required>
+//             <div class="input-group-append">
+//                 <input type="submit" value="add" class="btn btn-outline-secondary">
+//             </div>
+//         </div>
+//     </form>
+//     <button class="btn btn-outline-secondary">Arrêter l'écoute permanente</button>
+// </div>
+// <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase-app.js"></script>
+// <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase-firestore.js"></script>
+// <script>
+//     // Initialize Firebase
+//     var config = {
+//         apiKey: "AIzaSyADij-m4SoKb-hB-Gmix5hdCWSXJq4oJ6w",
+//         authDomain: "modern-js-stilgar.firebaseapp.com",
+//         projectId: "modern-js-stilgar",
+//         storageBucket: "modern-js-stilgar.appspot.com",
+//         messagingSenderId: "518314991342",
+//         appId: "1:518314991342:web:6990c945e4c7a58054ddff",
+//         measurementId: "G-XWH9NL626T"
+//     };
+//     firebase.initializeApp(config);
+//     const db = firebase.firestore();  
+// </script>
+
+
 // Alors je vous le cache pas, les sites, ça marche avec de la data. (Au cas ou vous ne le sachiez pas)
 // généralement du coup on bosse avec une Base De Données. 
 // il y a deux types de base de données : 
@@ -2112,85 +2145,270 @@
 ////////// </script>
 ////////// 
 
-// VERSION GET // 
+// attention, beaucoup de methodes sont ulisiés pour acceder a la BD firebase/firestore.
+// celles ci sont bien évidement dédiés qu'à ce genre de bases de données. Alors ça peut être pratique si justement on cherche à faire un truc avec ce genre de BD. Par contre si c'est avec une autre BD, 
+// faudra vous fier à ce bon vieux node.js. Je suppose qu'il doit yavoir moyen de présciser une db avec un coté back avec db = "adrresse.du.back" ou db.collection = "adresse.du.back"
+// ce serait interesasant que j'aille voir ça a un moment ou a un autre =)
+// enfin maintenant que j'y pense, c'est pour ça qu'il y a fetch // axios en fait non ... aller je sors
 
-const list = document.querySelector('ul')
-const addRecipe = (recipe, id) => {
+// VERSION GET FIREBASE // 
 
-    let time = recipe.created_at.toDate()
+//const list = document.querySelector('ul')
+//const button = document.querySelector('button')
+//const addRecipe = (recipe, id) => {
+//
+//    let time = recipe.created_at.toDate()
+//
+//    let html = `
+//    <li data-id="${id}"> 
+//    <div>${recipe.title}</div>
+//    <div>${time}</div>
+//    <button class="btn btn-danger btn-sm my-2">Suprimer</button>
+//    </li>
+//    `;
+//
+//    list.innerHTML += html;
+//}
+//
+//const deleteRecipe = (id) => {
+//    const recipes = document.querySelectorAll('li')
+//    recipes.forEach(recipe => {
+//        if (recipe.getAttribute('data-id') === id) {
+//            recipe.remove();
+//        }
+//    })
+//}
 
-    let html = `
-    <li data-id="${id}"> 
-    <div>${recipe.title}</div>
-    <div>${time}</div>
-    <button class="btn btn-danger btn-sm my-2">Suprimer</button>
-    </li>
-    `;
 
-    list.innerHTML += html;
-}
+// On commente ça parce que l'on va le remplacer par un addeventlistener qui va checker chaque modif de la bd. Enfin à peu près. 
+// je crois qu'on va fabriquer une sorte d'useeffect pour la db; cool non ? 
 
-db.collection('recipes') // accès à la DB, et à la collection spécifique
-    .get() // methode pour grab des datas
-    .then(snapshot => { // puis en fonction de la réponse, on fait ça : simple, basique.
-        // console.log(snapshot.docs[0].data()) // ça permet de voir les datas dans la base de données. (et la, ça marche, truc de fou...)
-        // mais ce qu'on veut c'est de tous les avoir. donc on balance un forEach
-        snapshot.forEach(doc => addRecipe(doc.data(), doc.id));
-    })
-    .catch(err => console.log(err))
+// GET DOCUMENT MAIS QU'UNE FOIS // 
+// db.collection('recipes') // accès à la DB, et à la collection spécifique
+//     .get() // methode pour grab des datas
+//     .then(snapshot => { // puis en fonction de la réponse, on fait ça : simple, basique.
+//         // console.log(snapshot.docs[0].data()) // ça permet de voir les datas dans la base de données. (et la, ça marche, truc de fou...)
+//         // mais ce qu'on veut c'est de tous les avoir. donc on balance un forEach
+//         snapshot.forEach(doc => addRecipe(doc.data(), doc.id));
+//     })
+//     .catch(err => console.log(err))
 
-// VERSION SUMBIT//ADD // 
+// GET DOCUMENT MAIS AVEC UN "ADDEVENTLISTENER"
 
-// j'ai envie de dire que c'est pas foufou par rapport à notre utilisation de mongoose par exemple
-// on crée un modèle qui va aller pousser dans la db, dans la collection reciepe ce modele
-// c'est plutôt cool de faire ça a la main aussi =)
-// je pense que presque tout parler pour lui même dans cet exemple
-
-const form = document.querySelector('form')
-form.addEventListener('submit', e => {
-    e.preventDefault()
-
-    const now = new Date()
-
-    const recipe = {
-        title: form.recipe.value,
-        // notez que pour le Timestamp, firebase/firestore à sa propre notation bien spécifique. 
-        created_at: firebase.firestore.Timestamp.fromDate(now)
-    }
-
-    db.collection('recipes')
-        .add(recipe)
-        .then(() => console.log('recette ajoutée'))
-        .catch(err => console.log(err))
-
-})
-
-// VERSION SUPPRIMER // 
+// alors c'est plus chelou que ce que je pensais. En fait on rajoute une methode bien spécifique qui s'applle onSnapshot au moment du get. Certes. 
+// en gros elle va checker en permanence s'il y a un changement. Encore une fois je pense et je suis sur même que c'est propre à Firebase DB. Enfin c'est pas de la frioriture, c'est plutot cool
+// vu que sur React, au final on mets en place des refreshs dans tous les sens, la la BD le fait automatiquement. Propre.
+// const unsub = db.collection('recipes')
+//     .onSnapshot(snapshot => {
+//         // console.log(snapshot) // snap est un truc DANS firebase (ouais encore une fois)
+//         // console.log(snapshot.docChanges()) // docChanges() est une methode nous permettant de voir tous les changements par rapport à la collection 
+//         // la première fois qu'on va faire un onSnapshot, tout sera écris par défault en 'added'
+//         snapshot.docChanges().forEach(change => {
+//             const doc = change.doc
+//             // donc on va checker dans cet array qui est celui qui check tous les changements
+//             // quand il va voir qu'un type est passé de added à removed, il va la retirer du DOM direct avec la fonction plus haut. TOUT SIMPLEMENT !
+//             if (change.type === 'added') {
+//                 addRecipe(doc.data(), doc.id)
+//             } else if (change.type === 'removed') {
+//                 deleteRecipe(doc.id)
+//             }
+//         })
+// 
+//     })
+// 
+// fonction pour arrêter l'écoute permanente de la DB 
+// alors c'est cool, du coup quand on fait quoi que ce soit, après avoir appuyé sur ce bouton, bha ça arrête tout du côté des actions. 
+// par contre pas moyen de le réactivé par la suite (lol ?)
+// pour que ça fonctionne, il faut mettre le "db.collection('recipes').onSnapshot(snapshot => {//do something})" dans une constante (qu'on appelle dans le bouton)
+// (j'insulte mon/notre/votre intelligence parfois en en écrivant autant ... mais bon, je rigolorais bien si je retombe la dessus dans 15 ans. (oopa))  
+// button.addEventListener('click', () => {
+//     unsub()
+//     console.log("arrêter d'écoute la base de données !")
+// })
+// 
+// // VERSION SUMBIT FIREBASE //ADD // 
+// 
+// // j'ai envie de dire que c'est pas foufou par rapport à notre utilisation de mongoose par exemple
+// // on crée un modèle qui va aller pousser dans la db, dans la collection reciepe ce modele
+// // c'est plutôt cool de faire ça a la main aussi =)
+// // je pense que presque tout parler pour lui même dans cet exemple
+// 
+// const form = document.querySelector('form')
+// form.addEventListener('submit', e => {
+//     e.preventDefault()
+// 
+//     const now = new Date()
+// 
+//     const recipe = {
+//         title: form.recipe.value,
+//         // notez que pour le Timestamp, firebase/firestore à sa propre notation bien spécifique. 
+//         created_at: firebase.firestore.Timestamp.fromDate(now)
+//     }
+// 
+//     db.collection('recipes')
+//         .add(recipe)
+//         .then(() => console.log('recette ajoutée'))
+//         .catch(err => console.log(err))
+// 
+// })
+// 
+// VERSION SUPPRIMER FIREBASE // 
 
 // on crée un event listener sur list pour pouvoir chopper tous les boutons supprimer individuellement
 // beaucoup plus pratique que d'en mettre un par bouton (ce qui au bout d'un moment serait pas loin d'être 
 // mission impossible, sponsorisé par la Scientologie)
-list.addEventListener('click', e => {
-    // faut qu'on s'assure que ce ne sont que les boutons que l'on va cliquer qui seront target
-    // la sans spécifier, toute la div, liste etc sera target
-    // console.log(e)
+// list.addEventListener('click', e => {
+//     // faut qu'on s'assure que ce ne sont que les boutons que l'on va cliquer qui seront target
+//     // la sans spécifier, toute la div, liste etc sera target
+//     // console.log(e)
+// 
+//     // pour supprimer il faut pointer vers le bon truc. on va alors rajouter l'id justement lors du 'get()'
+//     // puis l'intégrer dans la list quelque part. En l'orrucence on peut faire ça en HTML : <li data-id="${id}'>
+//     if (e.target.tagName === 'BUTTON') {
+//         // DONC, pour chopper l'id de façon simple. On choppe chaque element de la liste qui s'appelle button
+//         // dans chaque button on lui a rajouté un data-id propre à chaque élément dans la DB et donc récupérable
+//         // puis pour rechopper l'id qu'il faut on target le bouton, on choppe son parent et on choppe son attribut data-id
+//         // écris comme en dessous c'est un poil long, mais quand on y pense, c'est un peu simple non ? =)
+//         const id = e.target.parentElement.getAttribute('data-id')
+//         // console.log(id) et ça marche t'as vu ? 
+// 
+//         // encore une fois du coup on choppe la database
+//         db.collection('recipes')
+//             .doc(id)
+//             .delete()
+//             .then(() => console.log('recette supprimée'))
+//             .catch(err => console.log(err))
+// 
+//     }
+// })
 
-    // pour supprimer il faut pointer vers le bon truc. on va alors rajouter l'id justement lors du 'get()'
-    // puis l'intégrer dans la list quelque part. En l'orrucence on peut faire ça en HTML : <li data-id="${id}'>
-    if (e.target.tagName === 'BUTTON') {
-        // DONC, pour chopper l'id de façon simple. On choppe chaque element de la liste qui s'appelle button
-        // dans chaque button on lui a rajouté un data-id propre à chaque élément dans la DB et donc récupérable
-        // puis pour rechopper l'id qu'il faut on target le bouton, on choppe son parent et on choppe son attribut data-id
-        // écris comme en dessous c'est un poil long, mais quand on y pense, c'est un peu simple non ? =)
-        const id = e.target.parentElement.getAttribute('data-id')
-        // console.log(id) et ça marche t'as vu ? 
 
-        // encore une fois du coup on choppe la database
-        db.collection('recipes')
-            .doc(id)
-            .delete()
-            .then(() => console.log('recette supprimée'))
-            .catch(err => console.log(err))
+// *********************************** Interlude ******************************************* \\
+// *********************** On a fabriqué un petit chat en direct **************************** \\
+// ********************************* Interlude *********************************************** \\
 
-    }
-})
+// a voir dans les fichiers Chat RoomZ, parce que WareZ ?
+
+
+// ****************************************************************************************** \\
+// *********************** Autres fonctions modernes de ES6 ********************************** \\
+// ******************************************************************************************* \\
+
+
+// ************************* // PARAMETRE REST  ************************ \\
+
+// en gros le parametre rest est ce que t'as utilisé dans la fonction useSubmit dans ton hook perso sur uppertown. Permettant de chopper autants de paramètres que tu veux dans une fonction quand tu ne sais
+// // pas à l'avance combien tu vas en avoir. Maintenant tu sais au moins comment ça s'appelle =)
+// const double = (...nums) => {
+//     // faire un truc
+//     console.log(nums) // renvoie un array avec tous les arguments (spour ça que je l'avais appellé '...args')
+//     return nums.map(num => num * 2)
+// }
+// const result = double(1, 2, 3, 5, 4, 456, 4)
+// console.log(result) // et la tous les numeros sont doublés.
+
+// ************************* // // SYNTAXE SPREAD ARRAYS   ************************ \\
+// 
+// const people = ['jeff', 'lois', 'jeremy']
+// console.log(...people) // le spread, les sorts de l'array, d'ou le spread ? on les spread'em out ? (ils sont marrant a EC6) 
+// // réponse : jeff lois jeremy
+// const members = ['romain', 'pierre-alain', 'virigine', ...people]
+// console.log(members) // la on a spread l'array people DANS l'array membrers.
+// // réponse : ['romain', 'pierre-alain', 'virigine', 'jeff', 'lois', 'jeremy']
+
+// ************************* // // SYNTAXE SPREAD OBJECTS   ************************ \\
+// 
+// const person = { name: "jeff", age: 30, travail: 'chercheur à l\'ANPE' }
+// console.log(person)
+// // réponse : {name: 'jeff', age: 30, travail: "chercheur à l'ANPE"} (OBVIOUSLY)
+// const personClone = { ...person, adress: 'Grasse' }
+// console.log(personClone)
+// réponse : {name: 'jeff', age: 30, travail: "chercheur à l'ANPE", adress: 'Grasse'}
+
+// alors à la difference près que personClone ne devient pas un pointeur vers person, mais bel et bien un nouvel objet. (et ça, c'est cool)
+
+
+// ************************* SETS  ************************ \\
+
+// le set est un objet un peu particulier. Un peu => "COMME" <= un array mais pas tout à fait. (c'est oversimplifié en fait)
+// il ne permet pas la duplication d'informations (déjà ) 
+// const namesArray = ['guile', 'ryu', 'pikachu', 'himmler', 'ryu']
+// console.log(namesArray) // (5) ['guile', 'ryu', 'pikachu', 'himmler', 'ryu']
+// // ya pas de short version pour écrire un Set (pour le moment)
+// // const namesSet1 = new Set(['guile', 'ryu', 'pikachu', 'himmler', 'ryu']);
+// // const namesSet2 = new Set(namesArray)
+// // console.log(namesSet1) // (4) {'guile', 'ryu', 'pikachu', 'himmler'}
+// // console.log(namesSet2) // va donner la même chose
+// // const uniqueNames = [...namesSet1] // pour les remettre dans un array. 
+// const uniqueNames = [...new Set(namesArray)] // la version sympa pour mélanger le set et le spread. Du coup, c'est fait en une seule ligne.
+// console.log(uniqueNames)
+// 
+// // je disais que set était comme un array mais pas tout à fait, c'est parce qu'il n'a pas les mêmes methodes. Par exemple il n'a pas de lenght ou de push etc
+// 
+// const ages = new Set()
+// ages.add(20)
+// console.log(ages) // Set(1) {20}
+// ages.add(25).add(30)
+// console.log(ages) // Set(2) {20, 25, 30}
+// ages.add(25)
+// console.log(ages) // Set(3) {20, 25, 30} il va naturellement ignorer le troisieme. 
+// ages.delete(25) // vu qu'il n'a que des valeurs uniques, il va forcément retirer la bonne. 
+// console.log(ages)  // Set(2) {20, 30}
+// 
+// console.log(ages.size) // '2' // équivaut à la methode ages.lenght dans un array. 
+// console.log(ages.has(30), ages.has(25)) // true, false // il check s'il a la valeur 30 dans son Set.
+// 
+// ages.clear() // retire tout ce qu'il y a dans un set. 
+// console.log(ages) // Set(0) {size: 0}
+// 
+// const fremens = new Set([ // on met le new Set directement dans un array, un peu comme on l'a fait plus haut en faisaint un spread de set dans un array vide. 
+//     { name: 'paul', age: 16 },
+//     { name: 'stilgar', age: 150 },
+//     { name: 'chani', age: 14 }
+// ])
+// 
+// fremens.forEach(fremen => { // comme ça, après, on peut faire un forEach dessus
+//     console.log(fremen.name, fremen.age)
+// })
+
+// ************************* // SYMBOLS  ************************ \\
+
+// symbols est une des valeurs primitives de Js (une assez récente d'ailleurs je crois)
+// on en parle jamais assez de symbols, comme si tout le monde s'en foutais un peu... C'est peut être ce qui se passe en vrai ? 
+// la particularité des symboles c'est qu'ils sont UNIQUES. Il ne peut jamais en avoir deux pareils
+
+// const symbolOne = Symbol()
+// const symbolTwo = Symbol()
+// 
+// console.log(symbolOne, symbolTwo, typeof symbolOne)
+// //resultat :  Symbol() Symbol() 'symbol'
+// console.log(symbolOne === symbolTwo) // resultat : false  // deux symboles sont pas identiques
+// // console.log(symbolTwo == symbolOne) // resultat : false
+// 
+// const symbolThree = Symbol('un blaze')
+// const symbolFour = Symbol('un blaze')
+// console.log(symbolThree === symbolFour) // pareil même s'ils ont le même nom, ce sera FALSE
+// 
+// // a quoi ça sert ? 
+// // Les Symboles peuvent être utilisés comme des cles ou des noms de prorpiétés dans des objets
+// 
+// // prennons un exemple: on crée un objet 'fremen', on lui donne des attribus. Jusque là rien de choquant
+// // si on rappelle l'attribut et qu'on le replace par autre chose, naturellement ça va se modifier dans l'objet en lui même
+// // comme ici l'attribut 'sable' passant de true à false, alors qu'un fremen sans sable, est-ce vraiment un fremen ? 
+// const fremen = {}
+// fremen.age = 30;
+// fremen['sable'] = true;
+// console.log(fremen) // {age: 30, sable: true}
+// fremen['sable'] = false;
+// console.log(fremen) // {age: 30, sable: false}
+// 
+// fremen[symbolOne] = 'Leto II'
+// fremen[symbolTwo] = 'Jaques'
+// console.log(fremen) // {age: 30, sable: false, Symbol(): 'Leto II', Symbol(): 'Jaques'}
+// les keys semblent UNIQUES mais elles sont définitivement les MÊMES
+// franchement, c'est quand même super obscur, et la de suite, je ne vois pas trop dans quel cas l'utiliser ? MMMMhhhh
+
+
+// ****************************************************************************************** \\
+// *********************** MODERN WORKFLOW WITH BABEL && WEBPACK ****************************** \\
+// ******************************************************************************************* \\
