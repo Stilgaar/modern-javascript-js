@@ -58,7 +58,6 @@ class Chatroom {
 
     updateRoom(room) {
         this.room = room;
-        console.log('room updated')
         if (this.unsub) { // du coup quand on unsub en changeant de room, on unsub que de celle qu'on vient de quitter, et pas celle sur laquelle on va !
             this.unsub()
         }
